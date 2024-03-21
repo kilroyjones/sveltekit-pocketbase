@@ -1,0 +1,13 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer components {
+	.std-input-error {
+		@apply h-5 mt-1 text-xs text-error;
+	}
+
+	.std-input-field {
+		@apply w-full px-4 py-2 mt-2 border rounded-md focus:outline-none focus:ring-1;
+	}
+}
