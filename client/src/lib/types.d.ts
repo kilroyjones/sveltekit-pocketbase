@@ -1,8 +1,4 @@
-export type User = {
-	email: string;
-	password: string;
-};
-
+// User types
 export type RegisterUser = {
 	username: string;
 	email: string;
@@ -10,11 +6,18 @@ export type RegisterUser = {
 	passwordConfirm: string;
 };
 
+export type User = {
+	email: string;
+	password: string;
+};
+
+// Form types
 export type ErrorRegisterUser = {
 	username?: string;
 	email?: string;
 	password?: string;
 	passwordConfirm?: string;
+	other?: string;
 };
 
 export type ErrorLoginUser = {

@@ -3,11 +3,15 @@
 @tailwind utilities;
 
 @layer components {
+	.std-input-label {
+		@apply block text-sm font-medium text-left;
+	}
+
 	.std-input-error {
-		@apply h-5 mt-1 text-xs text-error;
+		@apply text-sm text-error;
 	}
 
 	.std-input-field {
-		@apply w-full px-4 py-2 mt-2 border rounded-md focus:outline-none focus:ring-1;
+		@apply w-full px-4 py-2 border rounded-md border-accent focus:outline-none focus:ring-1;
 	}
 }

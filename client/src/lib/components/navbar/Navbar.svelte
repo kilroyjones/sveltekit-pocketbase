@@ -1,12 +1,14 @@
 <script lang="ts">
+	// Components
 	import LoggedIn from './LoggedIn.svelte';
 	import LoggedOut from './LoggedOut.svelte';
 	import ToggleLightDarkMode from './ToggleLightDarkMode.svelte';
 
-	export let isLoggedIn: boolean = false;
+	// Types and variables
+	import { user } from '$lib/stores/user.store';
 </script>
 
-<div class="navbar bg-base-100">
+<div class="navbar">
 	<div class="flex-1">
 		<a href="/" class="text-xl btn btn-ghost">templateUI</a>
 		<div class="flex-none">
@@ -14,7 +16,7 @@
 		</div>
 	</div>
 	<div class="flex-none">
-		{#if isLoggedIn}
+		{#if $user}
 			<LoggedIn></LoggedIn>
 		{:else}
 			<LoggedOut></LoggedOut>

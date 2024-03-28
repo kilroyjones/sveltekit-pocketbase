@@ -1,27 +1,33 @@
-import type { AuthModel } from 'pocketbase';
+// Modules
 import { get, writable } from 'svelte/store';
 
+// Types and variabless
+import type { AuthModel } from 'pocketbase';
+
 export const user = writable<AuthModel | undefined>();
-export const isLoggedIn = writable<boolean>(false);
 
-export const setState = (userData: AuthModel | undefined) => {
-	user.set(userData);
-	if (get(user) != undefined) {
-		isLoggedIn.set(true);
-	} else {
-		isLoggedIn.set(false);
-	}
-};
-
+/**
+ * Returns user or undefined
+ */
 export const getState = () => {
 	return get(user);
 };
 
+/**
+ * Returns username or undefined
+ */
 export const getUsername = () => {
-	const _user = get(user);
-	if (_user) {
-		return _user.username;
+	const currentUser = get(user);
+	if (currentUser) {
+		return currentUser.username;
 	}
+};
+
+/**
+ * Sets the current
+ */
+export const setState = (userData: AuthModel | undefined) => {
+	user.set(userData);
 };
 
 export const UserStore = {
