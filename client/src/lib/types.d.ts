@@ -6,11 +6,6 @@ export type RegisterUser = {
 	passwordConfirm: string;
 };
 
-export type User = {
-	email: string;
-	password: string;
-};
-
 // Form types
 export type ErrorRegisterUser = {
 	username?: string;
@@ -31,4 +26,16 @@ export type ErrorDetails = {
 	code: number;
 	message: string;
 	data: Record<string, { code: string; message: string }>;
+};
+
+export type User = {
+	username: string;
+	email: string;
+	avatarUrl: string?;
+	avatar: string?;
+};
+
+export type UserLogin = {
+	email: string;
+	password: string;
 };

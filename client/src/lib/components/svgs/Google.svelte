@@ -1,4 +1,8 @@
-<button class="border-2 gsi-material-button bg-base-100 border-accent">
+<script lang="ts">
+	export let buttonText = '';
+</script>
+
+<button class="border-2 gsi-material-button">
 	<div class="gsi-material-button-state"></div>
 	<div class="gsi-material-button-content-wrapper">
 		<div class="gsi-material-button-icon">
@@ -23,13 +27,14 @@
 				></path>
 				<path
 					fill="#34A853"
-					d="M24 48c6.48 0 11.93-2.13 15.89-5.81l-7.73-6c-2.15 1.45-4.92 2.3-8.16 2.3-6.26 0-11.57-4.22-13.47-9.91l-7.98 6.19C6.51 42.62 14.62 48 24 48z"
+					d="M24 48c6.48 0 11.93-2.13 15.89-5.81l-7.73-6c-2.15 1.45-4.92 2.3-8.1Login
+					6 2.3-6.26 0-11.57-4.22-13.47-9.91l-7.98 6.19C6.51 42.62 14.62 48 24 48z"
 				></path>
 				<path fill="none" d="M0 0h48v48H0z"></path>
 			</svg>
 		</div>
-		<span class="gsi-material-button-contents">Sign in with Google</span>
-		<span style="display: none;">Sign in with Google</span>
+		<span class="gsi-material-button-contents">{buttonText}</span>
+		<span style="display: none;">{buttonText}</span>
 	</div>
 </button>
 

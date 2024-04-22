@@ -10,16 +10,20 @@
 
 <div class="navbar">
 	<div class="flex-1">
-		<a href="/" class="text-xl btn btn-ghost">templateUI</a>
+		<a href="/" class="text-xl btn btn-ghost">Template</a>
 		<div class="flex-none">
 			<ToggleLightDarkMode></ToggleLightDarkMode>
 		</div>
 	</div>
-	<div class="flex-none">
-		{#if $user}
-			<LoggedIn></LoggedIn>
+	{#if $user}
+		{#if $user.avatar}
+			<LoggedIn avatar={$user.avatar}></LoggedIn>
+		{:else if $user && $user.avatarUrl}
+			<LoggedIn avatar={$user.avatarUrl}></LoggedIn>
 		{:else}
-			<LoggedOut></LoggedOut>
+			<LoggedIn avatar={undefined}></LoggedIn>
 		{/if}
-	</div>
+	{:else}
+		<LoggedOut></LoggedOut>
+	{/if}
 </div>

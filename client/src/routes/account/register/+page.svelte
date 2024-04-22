@@ -11,9 +11,6 @@
 	import type { ErrorRegisterUser } from '$lib/types';
 	import type { PageData } from './$types';
 
-	// TODO: Use this to check if errors on OAuth
-	export let data: PageData;
-
 	let username = 'a';
 	let email = 'ad@asdf';
 	let password = 'adsf';
@@ -23,6 +20,7 @@
 	/**
 	 *
 	 * TODO: Use the data on authproviders from page.server.ts
+	 * @param event
 	 */
 	async function handleSubmit(event: { currentTarget: EventTarget & HTMLFormElement }) {
 		try {
@@ -53,19 +51,8 @@
 
 <div class="flex flex-col items-center min-h-screen lg:mt-20 md:mt-20">
 	<div class="w-full max-w-md px-8 py-6 text-center test rounded-xl bg-base-100">
-		<h3 class="mb-4 text-2xl font-bold text-center">Sign up</h3>
-		<form action="?/logout" class="gap-2 p-4 rounded form-control" method="POST">
-			<button type="submit">Logout</button>
-		</form>
-		<form
-			action="?/google"
-			class="gap-2 p-4 rounded form-control"
-			method="POST"
-			on:submit|preventDefault={handleSubmit}
-		>
-			<Google></Google>
-		</form>
-		<h6 class="mt-4 mb-2 font-bold text-center">or</h6>
+		<h3 class="mt-4 mb-4 text-3xl font-bold text-center">Register</h3>
+
 		<form
 			action="?/email"
 			class="gap-2 p-4 rounded form-control"
@@ -95,6 +82,7 @@
 				/>
 				<p class="mt-1 std-input-error">{errors.email || ''}</p>
 			</div>
+
 			<div>
 				<label for="password" class="mb-1 std-input-label">Password</label>
 				<input
@@ -124,10 +112,21 @@
 			</div>
 
 			<div class="flex justify-center">
-				<button class="px-6 py-2 leading-5 duration-200 transform rounded-md btn btn-accent"
-					>Register</button
-				>
+				<button class="px-6 py-2 leading-5 std-input-button">Register</button>
 			</div>
+
+			<div class="pt-4">
+				<hr />
+			</div>
+
+			<form
+				action="?/google"
+				class="gap-2 p-4 rounded form-control"
+				method="POST"
+				on:submit|preventDefault={handleSubmit}
+			>
+				<Google buttonText={'Register with Google'}></Google>
+			</form>
 		</form>
 	</div>
 </div>

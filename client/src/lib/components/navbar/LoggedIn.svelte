@@ -1,23 +1,21 @@
 <script lang="ts">
-	// TODO: Find a better way to do this.
-	// Right now if you move away and then reclick it'll open/close quick
-	// let toggleMenu = false;
-
-	// function toggle() {
-	// 	toggleMenu = !toggleMenu;
-	// }
+	export let avatar: string | undefined;
 </script>
 
 <div class="dropdown dropdown-end">
 	<div tabindex="0" role="button" class="btn btn-ghost btn-circle avatar">
-		<!-- on:click={toggle} -->
-		<!-- on:keydown={toggle} -->
-
-		<div class="w-10 rounded-full">
-			<img alt="Account avatar and menu" src="https://i.pravatar.cc/150?img=3" />
+		<div class="w-12 overflow-hidden border-4 rounded-full border-primary">
+			{#if avatar}
+				<img
+					class="object-cover w-full h-full rounded-full"
+					alt="Account avatar and menu"
+					src={avatar}
+				/>
+			{:else}
+				<div class="flex items-center justify-center w-full h-full rounded-full bg-info"></div>
+			{/if}
 		</div>
 	</div>
-	<!-- {#if toggleMenu} -->
 	<ul class="menu menu-md dropdown-content mt-3 z-[1] p-2 bg-base-100 shadow rounded-box w-52">
 		<li><a href="/account/profile">Profile</a></li>
 
@@ -27,11 +25,4 @@
 			</li>
 		</form>
 	</ul>
-	<!-- {/if} -->
 </div>
-
-<style>
-	/* .dropdown:focus-within .dropdown-content {
-		display: none;
-	} */
-</style>

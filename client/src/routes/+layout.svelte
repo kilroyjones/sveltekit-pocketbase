@@ -2,7 +2,7 @@
 	import '../app.css';
 
 	// Modules
-	import { UserStore } from '$lib/stores/user.store';
+	import { user } from '$lib/stores/user.store';
 
 	// Components
 	import Navbar from '$lib/components/navbar/Navbar.svelte';
@@ -12,7 +12,7 @@
 
 	export let data: LayoutServerData;
 
-	$: UserStore.setState(data.user);
+	$: $user = data.user;
 </script>
 
 <div class="bg-base-300">

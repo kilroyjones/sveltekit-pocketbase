@@ -14,6 +14,7 @@
 			{#if $user}
 				<button class="btn btn-primary" on:click={() => goto('/account/profile')}>Profile</button>
 			{:else}
+				<button class="mr-4 btn btn-primary" on:click={() => goto('/account/login')}>Login</button>
 				<button class="btn btn-primary" on:click={() => goto('/account/register')}>Register</button>
 			{/if}
 		</div>

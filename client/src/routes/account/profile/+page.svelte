@@ -1,20 +1,105 @@
 <script lang="ts">
-	import { UserStore } from '$lib/stores/user.store';
+	// Types and variables
+	import ProfileImage from '$lib/components/shared/ProfileImage.svelte';
+	import { user } from '$lib/stores/user.store';
+
+	let imageBase64 = '';
+
+	/**
+	 *
+	 * @param image
+	 */
+	const updateAvatar = async (image: string) => {
+		const res = await fetch('/api/updateAvatar', {
+			method: 'POST',
+			headers: {
+				'Content-Type': 'application/json'
+			},
+			body: JSON.stringify({
+				image: image
+			})
+		});
+
+		if (res.ok && $user) {
+			$user.avatar = image;
+		} else {
+			// TODO: handle updating avatar
+			console.error('Failed to update avatar');
+		}
+	};
+
+	/**
+	 * It will create an imgElement and then apply the existing image to the
+	 * canvas, resizing it so that it's 64px max width
+	 *
+	 * @param file
+	 */
+	const processImage = (file: FileList) => {
+		const reader = new FileReader();
+		reader.onload = (e: any) => {
+			const imgElement = document.createElement('img');
+			imgElement.src = e.target.result.toString();
+			imgElement.onload = () => {
+				const canvas = document.createElement('canvas');
+				const maxSize = 64;
+
+				let width = imgElement.width;
+				let height = imgElement.height;
+
+				height = (height / width) * maxSize;
+				width = maxSize;
+
+				canvas.width = width;
+				canvas.height = height;
+				const ctx = canvas.getContext('2d');
+
+				if (ctx) {
+					ctx.drawImage(imgElement, 0, 0, width, height);
+				}
+
+				imageBase64 = canvas.toDataURL('image/png');
+				if (imageBase64) {
+					updateAvatar(imageBase64);
+				}
+			};
+		};
+		reader.readAsDataURL(file[0]);
+	};
+
+	/**
+	 * This opens a file dialog and allows you to upload an image.
+	 *
+	 */
+	function triggerFileInput() {
+		const fileInput = document.createElement('input');
+		fileInput.type = 'file';
+		fileInput.accept = 'image/*';
+		fileInput.onchange = () => {
+			if (fileInput.files && fileInput.files.length > 0) {
+				processImage(fileInput.files);
+			}
+		};
+		fileInput.click();
+	}
 </script>
 
-<div class="flex justify-center">
-	<div class="w-full max-w-2xl">
+<div class="flex flex-col items-center min-h-screen lg:mt-20 md:mt-20">
+	<div class="w-full max-w-md px-8 py-6 rounded-xl bg-base-100">
 		<div class="flex items-center p-4">
-			<div class="w-12 h-12">
-				<img
-					src="https://i.pravatar.cc/150?img=3"
-					alt="Profile iamge"
-					class="object-cover w-full h-full rounded-full"
-				/>
-			</div>
-			<h1 class="pl-5 text-2xl font-bold">{UserStore.getUsername()}</h1>
+			{#if $user}
+				<button on:click={triggerFileInput}>
+					{#if $user.avatar}
+						<ProfileImage avatar={$user.avatar}></ProfileImage>
+					{:else if $user.avatarUrl}
+						<ProfileImage avatar={$user.avatarUrl}></ProfileImage>
+					{:else}
+						<ProfileImage avatar={undefined}></ProfileImage>
+					{/if}
+				</button>
+				<h1 class="pl-5 text-2xl font-bold">{$user.username}</h1>
+			{/if}
 		</div>
 		<div class="border-t border-gray-200"></div>
-		<div class="p-4 text-center">Placeholder</div>
+		<div class="p-4 text-center">Profile information</div>
 	</div>
 </div>

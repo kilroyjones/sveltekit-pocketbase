@@ -13,20 +13,17 @@ import { env } from '$env/dynamic/private';
  *
  * @returns
  */
-export const load: PageServerLoad = async ({}) => {
-	if (pb.authStore.isValid) {
-		throw redirect(301, '/');
+export const load: PageServerLoad = async ({ locals }) => {
+	if (!locals.pocketbase.authStore.model) {
+		return redirect(303, '/');
 	}
-	return {};
 };
 
+/**
+ *
+ */
 export const actions = {
-	/**
-	 *
-	 * @param param0
-	 * @returns
-	 */
-	login: async ({ request }) => {
+	updateAvatar: async ({ request }) => {
 		const data = Object.fromEntries(await request.formData()) as UserLogin;
 
 		try {
@@ -46,24 +43,5 @@ export const actions = {
 			return fail(400, errors);
 		}
 		throw redirect(307, '/');
-	},
-
-	/**
-	 *
-	 * @param param0
-	 */
-	google: async ({ locals, cookies }) => {
-		const provider = (
-			await locals.pocketbase.collection('users').listAuthMethods()
-		).authProviders.find((p: any) => p.name === 'google');
-
-		cookies.set('provider', JSON.stringify(provider), {
-			httpOnly: true,
-			path: `/`
-		});
-
-		if (provider) {
-			throw redirect(303, provider?.authUrl + env.REDIRECT_URL + provider?.name);
-		}
 	}
 } satisfies Actions;
