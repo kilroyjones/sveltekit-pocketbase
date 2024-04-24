@@ -32,16 +32,14 @@
 			const result: ActionResult = deserialize(await response.text());
 
 			// Results which don't trigger the "catch", but still fail
-			switch (result.type) {
-				case 'redirect':
-					await invalidateAll();
-					await applyAction(result);
-					break;
-				case 'failure':
-					errors = result.data as unknown as ErrorRegisterUser;
-					break;
-				default:
-					errors = { other: 'Error registering user.' };
+
+			if (result.type == 'redirect') {
+				await invalidateAll();
+				await applyAction(result);
+			} else if (result.type == 'failure') {
+				errors = result.data as unknown as ErrorRegisterUser;
+			} else {
+				errors = { other: 'Error registering user.' };
 			}
 		} catch (error: any) {
 			errors = { other: 'Error registering user.' };

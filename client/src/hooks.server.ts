@@ -1,5 +1,5 @@
 /**
- * Source: https://github.com/jianyuan/pocketbase-sveltekit-auth/
+ * Modified from: https://github.com/jianyuan/pocketbase-sveltekit-auth/
  */
 
 import type { Handle } from '@sveltejs/kit';
@@ -10,6 +10,7 @@ export const handle: Handle = async ({ event, resolve }) => {
 	event.locals.pocketbase = new PocketBase(PUBLIC_DATABASE_URL);
 	event.locals.pocketbase.authStore.loadFromCookie(event.request.headers.get('cookie') || '');
 
+	console.log('VALID', event.locals.pocketbase.authStore.isValid);
 	try {
 		// get an up-to-date auth store state by veryfing and refreshing the loaded auth model (if any)
 		event.locals.pocketbase.authStore.isValid &&

@@ -1,41 +1,39 @@
 // Modules
-import { pb } from '$lib/db/client';
+import { env } from '$env/dynamic/private';
+import { fail, redirect } from '@sveltejs/kit';
 
 // Types and constant
-import { redirect, type Actions, fail } from '@sveltejs/kit';
+import type { Actions } from '@sveltejs/kit';
 import type { ErrorDetails, ErrorLoginUser, FormErrors, UserLogin } from '$lib/types';
 import type { PageServerLoad } from './$types';
-import { env } from '$env/dynamic/private';
-
-// Types and constants
 
 /**
- *
+ * Checks if the authStore is valid
  * @returns
  */
-export const load: PageServerLoad = async ({}) => {
-	if (pb.authStore.isValid) {
-		throw redirect(301, '/');
+export const load: PageServerLoad = async ({ locals }) => {
+	if (locals.pocketbase.authStore.isValid) {
+		throw redirect(302, '/');
 	}
 	return {};
 };
 
 export const actions = {
 	/**
+	 * Email and password auth.
 	 *
-	 * @param param0
+	 * @param param0 (locals, request)
 	 * @returns
 	 */
-	login: async ({ request }) => {
+	login: async ({ locals, request }) => {
 		const data = Object.fromEntries(await request.formData()) as UserLogin;
 
 		try {
-			await pb.collection('users').authWithPassword(data.email, data.password);
+			await locals.pocketbase.collection('users').authWithPassword(data.email, data.password);
 		} catch (err: any) {
-			// Here we parse the response from pocketbase and match the form of the object
-			// to the ErrorRegisterUser type which is used on the form to provide validation
-			// information in case of errors.
 			const errorDetails: ErrorDetails = err.response;
+			// Here we parse the potential multiple errors that could occur and
+			// package them up to be returned as errors.
 			const errors: ErrorLoginUser = Object.entries(errorDetails.data).reduce<FormErrors>(
 				(acc, [key, { message }]) => {
 					acc[key] = message;
@@ -45,10 +43,18 @@ export const actions = {
 			);
 			return fail(400, errors);
 		}
+
+		// Runs if no failures
 		throw redirect(307, '/');
 	},
 
 	/**
+	 * Google OAuth2
+	 *
+	 * We get the provider from list of possible providers (set in Pocketbase) by
+	 * name and then set the cookie. If valid, we concat Google's auth url with
+	 * the redirect set in Google console as well as our provider name see
+	 * /account/oauth/google route.
 	 *
 	 * @param param0
 	 */
@@ -63,7 +69,10 @@ export const actions = {
 		});
 
 		if (provider) {
-			throw redirect(303, provider?.authUrl + env.REDIRECT_URL + provider?.name);
+			// Redirects the user to Google's login
+			throw redirect(302, provider.authUrl + env.REDIRECT_URL + provider.name);
 		}
+
+		throw redirect(302, '/errors');
 	}
 } satisfies Actions;

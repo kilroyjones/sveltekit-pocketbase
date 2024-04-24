@@ -5,7 +5,7 @@
 	import { invalidateAll } from '$app/navigation';
 
 	// Types and variables
-	import type { ActionResult } from '@sveltejs/kit';
+	import { redirect, type ActionResult } from '@sveltejs/kit';
 	import Google from '$lib/components/svgs/Google.svelte';
 
 	let email = '';
@@ -36,7 +36,7 @@
 		} else if (result.type == 'failure') {
 			error = 'Invalid username or password';
 		} else {
-			// TODO handle other type coming back?
+			error = 'An unknown error occurred';
 		}
 	};
 
@@ -73,9 +73,11 @@
 					bind:value={password}
 				/>
 			</div>
+
 			<div class="flex justify-center mt-2">
 				<p class="std-input-error">{error}</p>
 			</div>
+
 			<div class="flex justify-center mt-1">
 				<button class="px-6 py-2 leading-5 std-input-button">Login</button>
 			</div>

@@ -1,7 +1,6 @@
 // Modules
-import { pb } from '$lib/db/client';
-import { fail, redirect } from '@sveltejs/kit';
 import { env } from '$env/dynamic/private';
+import { fail, redirect } from '@sveltejs/kit';
 
 // Types and constants
 import type { Actions, PageServerLoad } from './$types';
@@ -14,7 +13,7 @@ import type { ErrorDetails, ErrorRegisterUser, FormErrors, RegisterUser } from '
  */
 export const load: PageServerLoad = async ({ locals }) => {
 	if (locals.pocketbase.authStore.model) {
-		return redirect(303, '/');
+		return redirect(302, '/');
 	}
 
 	const authMethods: AuthMethodsList = await locals.pocketbase
@@ -34,10 +33,10 @@ export const actions = {
 	/**
 	 * Email
 	 */
-	email: async ({ request }) => {
+	email: async ({ locals, request }) => {
 		const data = Object.fromEntries(await request.formData()) as RegisterUser;
 		try {
-			await pb.collection('users').create(data);
+			await locals.pocketbase.collection('users').create(data);
 		} catch (err: any) {
 			/**
 			 * Parse the response from pocketbase and match the form of the object to
@@ -54,11 +53,18 @@ export const actions = {
 			);
 			return fail(400, errors);
 		}
-		throw redirect(301, '/account/login');
+		throw redirect(302, '/account/login');
 	},
 
 	/**
-	 * Google (OAuth)
+	 * Google OAuth2
+	 *
+	 * We get the provider from list of possible providers (set in Pocketbase) by
+	 * name and then set the cookie. If valid, we concat Google's auth url with
+	 * the redirect set in Google console as well as our provider name see
+	 * /account/oauth/google route.
+	 *
+	 * @param param0
 	 */
 	google: async ({ locals, cookies }) => {
 		const provider = (
@@ -71,7 +77,7 @@ export const actions = {
 		});
 
 		if (provider) {
-			throw redirect(303, provider?.authUrl + env.REDIRECT_URL + provider?.name);
+			throw redirect(302, provider?.authUrl + env.REDIRECT_URL + provider?.name);
 		}
 	}
 } satisfies Actions;

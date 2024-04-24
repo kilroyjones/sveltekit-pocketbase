@@ -10,17 +10,16 @@
 	 * @param image
 	 */
 	const updateAvatar = async (image: string) => {
-		const res = await fetch('/api/updateAvatar', {
+		const formData = new FormData();
+		formData.append('avatar', image);
+
+		console.log(formData);
+		const result = await fetch('?/updateAvatar', {
 			method: 'POST',
-			headers: {
-				'Content-Type': 'application/json'
-			},
-			body: JSON.stringify({
-				image: image
-			})
+			body: formData
 		});
 
-		if (res.ok && $user) {
+		if (result.ok && $user) {
 			$user.avatar = image;
 		} else {
 			// TODO: handle updating avatar

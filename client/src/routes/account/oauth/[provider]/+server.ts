@@ -1,4 +1,4 @@
-import { redirect } from '@sveltejs/kit';
+import { error, redirect } from '@sveltejs/kit';
 import type { RequestHandler } from './$types';
 import { env } from '$env/dynamic/private';
 
@@ -21,7 +21,11 @@ export const GET: RequestHandler = async ({ locals, url, cookies }) => {
 	}
 
 	try {
-		const res = await locals.pocketbase
+		/**
+		 * After the user has been redirected to the Google login screen they'll be
+		 * directed here and we complete the auth process.
+		 */
+		const result = await locals.pocketbase
 			.collection('users')
 			.authWithOAuth2Code(
 				provider.name,
@@ -30,20 +34,25 @@ export const GET: RequestHandler = async ({ locals, url, cookies }) => {
 				env.REDIRECT_URL + provider.name
 			);
 
-		if (res.meta && res.record) {
-			const user = await locals.pocketbase.collection('users').update(res.record.id, {
-				avatarUrl: res.meta.avatarUrl,
-				name: res.meta.name,
-				username: res.meta.rawUser.given_name
+		/**
+		 * Pocketbase doesn't save all the data from Google so we add it here.
+		 */
+		if (result.meta && result.record) {
+			let user = await locals.pocketbase.collection('users').update(result.record.id, {
+				avatarUrl: result.meta.avatarUrl,
+				name: result.meta.name,
+				username: result.meta.rawUser.given_name
 			});
 
-			if (user) {
-				throw redirect(303, '/');
+			if (user == undefined) {
+				throw error;
 			}
+		} else {
+			throw error;
 		}
-		throw redirect(303, '/account/error');
 	} catch (error) {
-		console.error(error);
-		return redirect(303, '/');
+		return redirect(302, '/errors');
 	}
+
+	throw redirect(302, '/');
 };
