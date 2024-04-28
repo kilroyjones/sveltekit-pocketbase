@@ -68,8 +68,8 @@ const light = "cupcake";
 
 Just make sure they're added in the **tailwind.config.js**:
 
-```json
+```javascript
 daisyui: {
-    themes: ['light', 'dark', 'cupcake', 'synthwave']
+  themes: ["light", "dark", "cupcake", "synthwave"];
 }
 ```
