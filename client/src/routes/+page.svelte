@@ -10,7 +10,7 @@
 	<div class="text-center hero-content">
 		<div class="max-w-md">
 			<h1 class="text-5xl font-bold">Welcome!</h1>
-			<p class="py-6">Put some site information here and talk about yourself!</p>
+			<p class="py-6">Put some site information here!</p>
 			{#if $user}
 				<button class="btn btn-primary" on:click={() => goto('/account/profile')}>Profile</button>
 			{:else}

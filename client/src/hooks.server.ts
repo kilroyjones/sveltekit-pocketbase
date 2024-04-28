@@ -1,23 +1,25 @@
 /**
  * Modified from: https://github.com/jianyuan/pocketbase-sveltekit-auth/
  */
+import PocketBase from 'pocketbase';
 
+//  Type and variables
 import type { Handle } from '@sveltejs/kit';
 import { PUBLIC_DATABASE_URL } from '$env/static/public';
-import PocketBase from 'pocketbase';
 
 export const handle: Handle = async ({ event, resolve }) => {
 	event.locals.pocketbase = new PocketBase(PUBLIC_DATABASE_URL);
 	event.locals.pocketbase.authStore.loadFromCookie(event.request.headers.get('cookie') || '');
 
-	console.log('VALID', event.locals.pocketbase.authStore.isValid);
+	/**
+	 *
+	 */
 	try {
-		// get an up-to-date auth store state by veryfing and refreshing the loaded auth model (if any)
-		event.locals.pocketbase.authStore.isValid &&
-			(await event.locals.pocketbase.collection('users').authRefresh());
+		if (event.locals.pocketbase.authStore.isValid) {
+			await event.locals.pocketbase.collection('users').authRefresh();
+		}
 		event.locals.user = structuredClone(event.locals.pocketbase.authStore.model);
-	} catch (_) {
-		// clear the auth store on failed refresh
+	} catch (__error: any) {
 		event.locals.pocketbase.authStore.clear();
 		event.locals.user = null;
 	}
@@ -25,6 +27,7 @@ export const handle: Handle = async ({ event, resolve }) => {
 	const response = await resolve(event);
 	const expires = new Date();
 
+	// Set expiration time on the cookie
 	expires.setTime(expires.getTime() + 1000 * 60 * 60 * 24 * 7);
 
 	response.headers.append(

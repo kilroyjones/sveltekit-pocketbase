@@ -6,7 +6,7 @@ import type { Actions } from '@sveltejs/kit';
 import type { PageServerLoad } from './$types';
 
 /**
- *
+ * Check is the authStore exists or not.
  * @returns
  */
 export const load: PageServerLoad = async ({ locals }) => {
@@ -16,7 +16,8 @@ export const load: PageServerLoad = async ({ locals }) => {
 };
 
 /**
- *
+ * Form action which handles uploading the new avatar.
+ * Redirects to errors if failed.
  */
 export const actions = {
 	updateAvatar: async ({ locals, request }) => {

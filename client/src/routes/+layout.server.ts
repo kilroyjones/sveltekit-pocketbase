@@ -1,7 +1,7 @@
 import type { LayoutServerLoad } from './$types';
 
 /**
- * If the user exist we pull the information and assign it to our store.
+ * If the user exists we pull the information and assign it to our store.
  */
 export const load: LayoutServerLoad = async ({ locals }) => {
 	if (locals.user) {

@@ -15,10 +15,11 @@
 			<ToggleLightDarkMode></ToggleLightDarkMode>
 		</div>
 	</div>
+
 	{#if $user}
 		{#if $user.avatar}
 			<LoggedIn avatar={$user.avatar}></LoggedIn>
-		{:else if $user && $user.avatarUrl}
+		{:else if $user.avatarUrl}
 			<LoggedIn avatar={$user.avatarUrl}></LoggedIn>
 		{:else}
 			<LoggedIn avatar={undefined}></LoggedIn>

@@ -4,15 +4,15 @@
 
 <div class="dropdown dropdown-end">
 	<div tabindex="0" role="button" class="btn btn-ghost btn-circle avatar">
-		<div class="w-12 overflow-hidden border-4 rounded-full border-primary">
+		<div class="w-12 overflow-hidden rounded-full">
 			{#if avatar}
 				<img
-					class="object-cover w-full h-full rounded-full"
+					class="object-cover w-full h-full border-4 rounded-full border-primary"
 					alt="Account avatar and menu"
 					src={avatar}
 				/>
 			{:else}
-				<div class="flex items-center justify-center w-full h-full rounded-full bg-info"></div>
+				<div class="flex items-center justify-center w-full h-full rounded-full bg-primary"></div>
 			{/if}
 		</div>
 	</div>

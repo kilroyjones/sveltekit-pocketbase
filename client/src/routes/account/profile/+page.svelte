@@ -6,6 +6,7 @@
 	let imageBase64 = '';
 
 	/**
+	 * Uploads the avatar
 	 *
 	 * @param image
 	 */
@@ -13,7 +14,6 @@
 		const formData = new FormData();
 		formData.append('avatar', image);
 
-		console.log(formData);
 		const result = await fetch('?/updateAvatar', {
 			method: 'POST',
 			body: formData
@@ -22,7 +22,6 @@
 		if (result.ok && $user) {
 			$user.avatar = image;
 		} else {
-			// TODO: handle updating avatar
 			console.error('Failed to update avatar');
 		}
 	};
@@ -40,7 +39,7 @@
 			imgElement.src = e.target.result.toString();
 			imgElement.onload = () => {
 				const canvas = document.createElement('canvas');
-				const maxSize = 64;
+				const maxSize = 128;
 
 				let width = imgElement.width;
 				let height = imgElement.height;
@@ -82,11 +81,11 @@
 	}
 </script>
 
-<div class="flex flex-col items-center min-h-screen lg:mt-20 md:mt-20">
+<div class="flex flex-col items-center min-h-screen mt-20 lg:mt-20 md:mt-20">
 	<div class="w-full max-w-md px-8 py-6 rounded-xl bg-base-100">
 		<div class="flex items-center p-4">
 			{#if $user}
-				<button on:click={triggerFileInput}>
+				<button on:click={triggerFileInput} class="relative">
 					{#if $user.avatar}
 						<ProfileImage avatar={$user.avatar}></ProfileImage>
 					{:else if $user.avatarUrl}
@@ -94,6 +93,10 @@
 					{:else}
 						<ProfileImage avatar={undefined}></ProfileImage>
 					{/if}
+					<span
+						class="absolute bottom-0 right-0 flex items-center justify-center w-6 h-6 text-md text-white transform translate-x-1 translate-y-1.5 border-white rounded-full bg-primary"
+						>+</span
+					>
 				</button>
 				<h1 class="pl-5 text-2xl font-bold">{$user.username}</h1>
 			{/if}
