@@ -4,10 +4,10 @@ This is a template I created as a basis for a few of my own projects. It uses th
 
 Current features:
 
-[x] - Register via email
-[x] - Register via Google
-[x] - Light and dark mode toggle
-[x] - Uploading an avatar
+- [x] Register via email
+- [x] Register via Google
+- [x] Light and dark mode toggle
+- [x] Uploading an avatar
 
 ### Setup the backend
 
@@ -62,8 +62,8 @@ After you should be ready to go.
 Since this is using DaisyUI you have access to different themes, which can be changed in **ToggleLightDarkMode.svelte**:
 
 ```javascript
-const dark = 'synthwave';
-const light = 'cupcake';
+const dark = "synthwave";
+const light = "cupcake";
 ```
 
 Just make sure they're added in the **tailwind.config.js**:
