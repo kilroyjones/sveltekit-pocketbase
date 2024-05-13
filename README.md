@@ -45,7 +45,7 @@ You will then need to set your Google Oauth credentials which you can get from y
 From the **client** folder run:
 
 ```bash
-npm run install
+npm install
 ```
 
 Next, you'll need to change **template.env** to **.env** and make sure it has the following to get local development working:
